@@ -17,9 +17,10 @@ def bit_to_byte(bits):
 # Byte to bit: Takes an integer in [0, 255] and converts it into a tuple of length 8
 def byte_to_bit(byte):
     bits = []
+    byteInt = int(byte)
     for i in range (8):
         x = 7 - i
-        byteInt = int(byte)
+
         if (byteInt - (2 ** x)) >= 0:
             bits.append(1)
             byteInt = byteInt - (2 ** x)
