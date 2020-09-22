@@ -9,8 +9,9 @@ import math
 # Bit to byte: Takes a tuple of length 8 and converts it into an integer in [0, 255]
 def bit_to_byte(bits):
     sum = 0
-    for i in range(0, 7):
-        sum += int(bits[i]) ** (7-i)
+    for i in range(8):
+        if bits[i] == 1:
+            sum += math.pow(2, (8-i))
     return sum
 
 # Byte to bit: Takes an integer in [0, 255] and converts it into a tuple of length 8
@@ -73,8 +74,9 @@ def decrypt_mhkc(ciphertext, private_key):
 def main():
     # Testing code here
     bits = []
-    for i in range(0, 7):
+    for i in range(8):
         bits.append(input("one character, 0 or 1: "))
+    print(bits)
     print(bit_to_byte(bits))
 
     byte = input("one integer, 0 - 255: ")
