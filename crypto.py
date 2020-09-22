@@ -10,20 +10,19 @@ import math
 def bit_to_byte(bits):
     sum = 0
     for i in range(8):
-        if bits[i] == 1:
-            sum += math.pow(2, (8-i))
+        if int(bits[i]) == 1:
+            sum += (2 ** (7 - i))
     return sum
 
 # Byte to bit: Takes an integer in [0, 255] and converts it into a tuple of length 8
 def byte_to_bit(byte):
     bits = []
-    for i in range (0, 7):
+    for i in range (8):
         x = 7 - i
-        # something something math.pow(2, x)
-        if (byte - (2 ** x)) > 0:
+        byteInt = int(byte)
+        if (byteInt - (2 ** x)) >= 0:
             bits.append(1)
-            byte = byte % (2 ** x)
-            # byte = byte - (2 ** x)
+            byteInt = byteInt - (2 ** x)
         else:
             bits.append(0)
     return bits
@@ -73,11 +72,11 @@ def decrypt_mhkc(ciphertext, private_key):
 
 def main():
     # Testing code here
-    bits = []
-    for i in range(8):
-        bits.append(input("one character, 0 or 1: "))
-    print(bits)
-    print(bit_to_byte(bits))
+
+    # bits = []
+    # for i in range(8):
+    #     bits.append(input("one character, 0 or 1: "))
+    # print(bit_to_byte(bits))
 
     byte = input("one integer, 0 - 255: ")
     print(byte_to_bit(byte))
