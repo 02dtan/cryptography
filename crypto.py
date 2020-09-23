@@ -4,7 +4,7 @@ Authors: Jasper Sands, Jackson Kunde, William Akis, Daniel Tan, Colin Skinner
 Date:
 """
 import math
-
+import string
 
 ###Dependencies
 # Bit to byte: Takes a tuple of length 8 and converts it into an integer in [0, 255]
@@ -72,12 +72,32 @@ def decrypt_caesar(ciphertext, offset):
 # Arguments: string, string
 # Returns: string
 def encrypt_vigenere(plaintext, keyword):
-    pass
+    alphabet = string.ascii_uppercase
+
+    for i in range(0, len(plaintext)):
+        index = alphabet.find(keyword[i % len(keyword)])
+        index2 = alphabet.find(plaintext[i])
+        index3 = int(index + index2)
+    
+    encrytped = ""
+    encrypted += alphabet[index3 % len(alphabet)]
+
+    return encrypted
 
 # Arguments: string, string
 # Returns: string
 def decrypt_vigenere(ciphertext, keyword):
-    pass
+    alphabet = string.ascii_uppercase
+
+    for i in range(0, len(plaintext)):
+        index = alphabet.find(keyword[i % len(keyword)])
+        index2 = alphabet.find(plaintext[i])
+        index3 = int(index2 - index)
+
+    decrypted = ""
+    decrypted += alphabet[index3 % len(alphabet)]
+
+    return decrypted
 
 # Merkle-Hellman Knapsack Cryptosystem
 # Arguments: integer
