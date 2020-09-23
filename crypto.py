@@ -5,6 +5,7 @@ Date:
 """
 import math
 
+
 ###Dependencies
 # Bit to byte: Takes a tuple of length 8 and converts it into an integer in [0, 255]
 def bit_to_byte(bits):
@@ -32,12 +33,40 @@ def byte_to_bit(byte):
 # Arguments: string, integer
 # Returns: string
 def encrypt_caesar(plaintext, offset):
-    pass
+    encrypted = ""
+
+    for i in plaintext:
+        if 64 < ord(i) < 91:
+            new_index = ord(i) + offset
+
+            if new_index < 91:
+                encrypted = encrypted + chr(new_index)
+            else:
+                encrypted = encrypted + chr(new_index - 26)
+        else:
+            encrypted = encrypted + i
+
+
+    return encrypted
 
 # Arguments: string, integer
 # Returns: string
 def decrypt_caesar(ciphertext, offset):
-    pass
+    decrypted = ""
+
+    for i in ciphertext:
+        if 64 < ord(i) < 91:
+            new_index = ord(i) - offset
+
+            if new_index > 64:
+                decrypted = decrypted + chr(new_index)
+            else:
+                decrypted = decrypted + chr(new_index + 26)
+        else:
+            decrypted = decrypted + i
+
+
+    return decrypted
 
 # Vigenere Cipher
 # Arguments: string, string
@@ -72,16 +101,25 @@ def decrypt_mhkc(ciphertext, private_key):
     pass
 
 def main():
-    # Testing code here
+
+    a = input("Word: ").upper()
+    num = int(input("Number: "))
+
+    yes = encrypt_caesar(a, num)
+
+    print(decrypt_caesar(yes, num))
+
+
+
 
     # bits = []
     # for i in range(8):
     #     bits.append(input("one character, 0 or 1: "))
     # print(bit_to_byte(bits))
+    #
+    # byte = input("one integer, 0 - 255: ")
+    # print(byte_to_bit(byte))
 
-    byte = input("one integer, 0 - 255: ")
-    print(byte_to_bit(byte))
-    # 01000101
 
 if __name__ == "__main__":
     main()
