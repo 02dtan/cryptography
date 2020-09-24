@@ -140,16 +140,24 @@ def create_public_key(private_key):
 # Arguments: string, B
 # Returns: list of integers
 def encrypt_mhkc(plaintext, public_key):
-    plaintext_num = []
+    encrypt = []
 
     for i in plaintext:
-        let_val = byte_to_bit(ord(i))
-        plaintext_num.append(let_val)
+        tmp = []
+        binary = byte_to_bit(ord(i))
+        for x in range(8):
+            tmp.append(binary[x] * public_key[x])
+        encrypt.append(sum(tmp))
+
+    return encrypt
+            
 
 
 # Arguments: list of integers, tuple (W,Q,R)
 # Returns: bytearray or str of plaintext
 def decrypt_mhkc(ciphertext, private_key):
+
+    
     pass
 
 def main():
@@ -164,6 +172,8 @@ def main():
     print(peen)
     other_peen = create_public_key(peen)
     print(other_peen)
+
+    print(encrypt_mhkc("HELLO", other_peen))
 
 if __name__ == "__main__":
     main()
