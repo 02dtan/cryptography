@@ -126,15 +126,26 @@ def generate_private_key(n=8):
 
     return private_key
 
-# Arguments: tuple (W, Q, R) - W a length-n tuple of integers, Q and R both integers
+# Arguments: tuple (W, Q, R)
 # Returns: tuple B - a length-n tuple of integers
 def create_public_key(private_key):
-    pass
+
+    public_key = []
+
+    for line in (private_key[0]):
+        public_key.append((private_key[2] * line) % private_key[1])
+
+    return public_key
 
 # Arguments: string, B
 # Returns: list of integers
 def encrypt_mhkc(plaintext, public_key):
-    pass
+    plaintext_num = []
+
+    for i in plaintext:
+        let_val = byte_to_bit(ord(i))
+        plaintext_num.append(let_val)
+
 
 # Arguments: list of integers, tuple (W,Q,R)
 # Returns: bytearray or str of plaintext
@@ -149,8 +160,10 @@ def main():
     # yes = encrypt_caesar(a, num)
     #
     # print(decrypt_caesar(yes, num))
-
-    print(generate_private_key())
+    peen = generate_private_key()
+    print(peen)
+    other_peen = create_public_key(peen)
+    print(other_peen)
 
 if __name__ == "__main__":
     main()
