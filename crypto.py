@@ -5,6 +5,7 @@ Date:
 """
 import math
 import string
+import random
 
 ###Dependencies
 # Bit to byte: Takes a tuple of length 8 and converts it into an integer in [0, 255]
@@ -78,7 +79,7 @@ def encrypt_vigenere(plaintext, keyword):
         index = alphabet.find(keyword[i % len(keyword)])
         index2 = alphabet.find(plaintext[i])
         index3 = int(index + index2)
-    
+
     encrytped = ""
     encrypted += alphabet[index3 % len(alphabet)]
 
@@ -103,43 +104,53 @@ def decrypt_vigenere(ciphertext, keyword):
 # Arguments: integer
 # Returns: tuple (W, Q, R) - W a length-n tuple of integers, Q and R both integers
 def generate_private_key(n=8):
-    pass
+
+    W = []
+
+    W.append(random.randint(1,100))
+    for i in range(n-1):
+        W.append(sum(W) + random.randint(1,100))
+
+    private_key = [tuple(W)]
+    Q = sum(W) + random.randint(0,100)
+
+    private_key.append(Q)
+    R = 0
+
+    for r in range(2,Q):
+        if math.gcd(r,Q) == 1:
+            R = r
+            break
+
+    private_key.append(R)
+
+    return private_key
 
 # Arguments: tuple (W, Q, R) - W a length-n tuple of integers, Q and R both integers
 # Returns: tuple B - a length-n tuple of integers
 def create_public_key(private_key):
     pass
 
-# Arguments: string, tuple (W, Q, R)
+# Arguments: string, B
 # Returns: list of integers
 def encrypt_mhkc(plaintext, public_key):
     pass
 
-# Arguments: list of integers, tuple B - a length-n tuple of integers
+# Arguments: list of integers, tuple (W,Q,R)
 # Returns: bytearray or str of plaintext
 def decrypt_mhkc(ciphertext, private_key):
     pass
 
 def main():
 
-    a = input("Word: ").upper()
-    num = int(input("Number: "))
-
-    yes = encrypt_caesar(a, num)
-
-    print(decrypt_caesar(yes, num))
-
-
-
-
-    # bits = []
-    # for i in range(8):
-    #     bits.append(input("one character, 0 or 1: "))
-    # print(bit_to_byte(bits))
+    # a = input("Word: ").upper()
+    # num = int(input("Number: "))
     #
-    # byte = input("one integer, 0 - 255: ")
-    # print(byte_to_bit(byte))
+    # yes = encrypt_caesar(a, num)
+    #
+    # print(decrypt_caesar(yes, num))
 
+    print(generate_private_key())
 
 if __name__ == "__main__":
     main()
