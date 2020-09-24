@@ -150,15 +150,47 @@ def encrypt_mhkc(plaintext, public_key):
         encrypt.append(sum(tmp))
 
     return encrypt
-            
 
+
+def mod_inverse(a,b):
+    
 
 # Arguments: list of integers, tuple (W,Q,R)
 # Returns: bytearray or str of plaintext
 def decrypt_mhkc(ciphertext, private_key):
+    final_list = []
+    for c in ciphertext:
+        bruh = []
+        r_prime = (1/private_key[2]) % private_key[1]
+        print(c)
+        print(private_key[2])
+        print(private_key[1])
+        print(r_prime)
+        c_prime = (c * r_prime) % private_key[1]
+        # c_prime = (1129*442) % 881
+        for value in private_key[0][::-1]:
+            # print(c_prime)
+            if c_prime >= value:
+                # print(value)
+                c_prime -= value
+                bruh.append(value)
+        x = []
+        for z in bruh:
+            for t in range(len(private_key[0])- 1):
+                if z == private_key[0][t]:
+                    x.append(t)
+        final = 0
+        # print(x)
+        # print(bruh)
+        for pos in x:
+            print("made it")
+            final += math.pow(2, 7-pos)
+            # print(final)
+        final_list.append(chr(int(final)))
 
-    
-    pass
+    return final_list
+                
+
 
 def main():
 
@@ -168,12 +200,18 @@ def main():
     # yes = encrypt_caesar(a, num)
     #
     # print(decrypt_caesar(yes, num))
-    peen = generate_private_key()
-    print(peen)
-    other_peen = create_public_key(peen)
-    print(other_peen)
+    # peen = generate_private_key()
+    # print(peen)
+    # other_peen = create_public_key(peen)
+    # print(other_peen)
 
-    print(encrypt_mhkc("HELLO", other_peen))
+    private_key = ([2, 7, 11, 21, 42, 89, 180, 354], 881, 588)
+    # private_key = generate_private_key()
+    public_key = (create_public_key(private_key))
+
+    print(encrypt_mhkc("a", public_key))
+    
+    print(decrypt_mhkc(encrypt_mhkc("a", public_key), private_key))
 
 if __name__ == "__main__":
     main()
