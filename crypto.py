@@ -152,7 +152,11 @@ def encrypt_mhkc(plaintext, public_key):
     return encrypt
 
 
-def mod_inverse(a,b):
+def mod_inverse(q, r):
+    for num in range(2, r):
+        if r*num % q == 1:
+            return num
+
     
 
 # Arguments: list of integers, tuple (W,Q,R)
@@ -161,7 +165,7 @@ def decrypt_mhkc(ciphertext, private_key):
     final_list = []
     for c in ciphertext:
         bruh = []
-        r_prime = (1/private_key[2]) % private_key[1]
+        r_prime = mod_inverse(private_key[2], private_key[1])
         print(c)
         print(private_key[2])
         print(private_key[1])
