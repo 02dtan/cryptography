@@ -157,43 +157,47 @@ def mod_inverse(q, r):
         if r*num % q == 1:
             return num
 
-    
+
 
 # Arguments: list of integers, tuple (W,Q,R)
 # Returns: bytearray or str of plaintext
 def decrypt_mhkc(ciphertext, private_key):
     final_list = []
-    for c in ciphertext:
-        bruh = []
-        r_prime = mod_inverse(private_key[2], private_key[1])
-        print(c)
-        print(private_key[2])
-        print(private_key[1])
-        print(r_prime)
+    for c in ciphertext: # each letter in text
+        letter_values = []
+        r_prime = mod_inverse(private_key[1], private_key[2])
+        # print(c)
+        # print(private_key[2])
+        # print(private_key[1])
+        # print(r_prime)
         c_prime = (c * r_prime) % private_key[1]
+        # print(c_prime)
         # c_prime = (1129*442) % 881
         for value in private_key[0][::-1]:
             # print(c_prime)
             if c_prime >= value:
                 # print(value)
                 c_prime -= value
-                bruh.append(value)
-        x = []
-        for z in bruh:
-            for t in range(len(private_key[0])- 1):
+                letter_values.append(value)
+        indices = []
+        for z in letter_values:
+            for t in range(len(private_key[0])):
                 if z == private_key[0][t]:
-                    x.append(t)
+                    indices.append(t)
         final = 0
         # print(x)
-        # print(bruh)
-        for pos in x:
-            print("made it")
+        # print(letter_values)
+        for pos in indices:
+            # print("made it")
             final += math.pow(2, 7-pos)
             # print(final)
         final_list.append(chr(int(final)))
 
-    return final_list
-                
+    final_string = "".join(final_list)
+
+    return final_string
+
+
 
 
 def main():
@@ -214,8 +218,8 @@ def main():
     public_key = (create_public_key(private_key))
 
     print(encrypt_mhkc("a", public_key))
-    
-    print(decrypt_mhkc(encrypt_mhkc("a", public_key), private_key))
+
+    print(decrypt_mhkc(encrypt_mhkc("", public_key), private_key))
 
 if __name__ == "__main__":
     main()
