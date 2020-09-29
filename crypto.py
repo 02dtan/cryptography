@@ -1,7 +1,7 @@
 """
 Crypto.py
 Authors: Jasper Sands, Jackson Kunde, William Akis, Daniel Tan, Colin Skinner
-Date:
+Date: Sep 30
 """
 import math
 import string
@@ -14,6 +14,7 @@ def bit_to_byte(bits):
     for i in range(8):
         if int(bits[i]) == 1:
             sum += (2 ** (7 - i))
+
     return sum
 
 # Byte to bit: Takes an integer in [0, 255] and converts it into a tuple of length 8
@@ -22,12 +23,12 @@ def byte_to_bit(byte):
     byteInt = int(byte)
     for i in range (8):
         x = 7 - i
-
         if (byteInt - (2 ** x)) >= 0:
             bits.append(1)
             byteInt = byteInt - (2 ** x)
         else:
             bits.append(0)
+
     return bits
 
 # Caesar Cipher
@@ -47,7 +48,6 @@ def encrypt_caesar(plaintext, offset):
         else:
             encrypted = encrypted + i
 
-
     return encrypted
 
 # Arguments: string, integer
@@ -66,7 +66,6 @@ def decrypt_caesar(ciphertext, offset):
         else:
             decrypted = decrypted + i
 
-
     return decrypted
 
 # Vigenere Cipher
@@ -80,7 +79,7 @@ def encrypt_vigenere(plaintext, keyword):
         index2 = alphabet.find(plaintext[i])
         index3 = int(index + index2)
 
-    encrytped = ""
+    encrypted = ""
     encrypted += alphabet[index3 % len(alphabet)]
 
     return encrypted
@@ -103,23 +102,22 @@ def decrypt_vigenere(ciphertext, keyword):
 # Merkle-Hellman Knapsack Cryptosystem
 # Arguments: integer
 # Returns: tuple (W, Q, R) - W a length-n tuple of integers, Q and R both integers
-def generate_private_key(n=8):
-
+def generate_private_key(n = 8):
     W = []
 
-    W.append(random.randint(1,100))
-    for i in range(n-1):
-        W.append(sum(W) + random.randint(1,100))
+    W.append(random.randint(1, 100))
+    for i in range(n - 1):
+        W.append(sum(W) + random.randint(1, 100))
 
     private_key = [tuple(W)]
-    Q = sum(W) + random.randint(0,100)
+    Q = sum(W) + random.randint(0, 100)
 
     private_key.append(Q)
     R = 0
 
-    for r in range(2,Q):
-        if math.gcd(r,Q) == 1:
-            R = r
+    for r in range(2, Q):
+        if math.gcd(r, Q) == 1:
+            R = r #because it's R
             break
 
     private_key.append(R)
@@ -129,7 +127,6 @@ def generate_private_key(n=8):
 # Arguments: tuple (W, Q, R)
 # Returns: tuple B - a length-n tuple of integers
 def create_public_key(private_key):
-
     public_key = []
 
     for line in (private_key[0]):
@@ -137,7 +134,7 @@ def create_public_key(private_key):
 
     return public_key
 
-# Arguments: string, B
+# Arguments: string, tuple B
 # Returns: list of integers
 def encrypt_mhkc(plaintext, public_key):
     encrypt = []
@@ -151,46 +148,40 @@ def encrypt_mhkc(plaintext, public_key):
 
     return encrypt
 
-
+# Arguments: two integers, q and r
+# Returns: result of inverse modulus function
 def mod_inverse(q, r):
     for num in range(2, r):
-        if r*num % q == 1:
+        if (r * num % q) == 1:
             return num
-
-
 
 # Arguments: list of integers, tuple (W,Q,R)
 # Returns: bytearray or str of plaintext
 def decrypt_mhkc(ciphertext, private_key):
     final_list = []
+
     for c in ciphertext: # each letter in text
         letter_values = []
+
         r_prime = mod_inverse(private_key[1], private_key[2])
-        # print(c)
-        # print(private_key[2])
-        # print(private_key[1])
-        # print(r_prime)
         c_prime = (c * r_prime) % private_key[1]
-        # print(c_prime)
-        # c_prime = (1129*442) % 881
+
         for value in private_key[0][::-1]:
-            # print(c_prime)
             if c_prime >= value:
-                # print(value)
                 c_prime -= value
                 letter_values.append(value)
+
         indices = []
+
         for z in letter_values:
             for t in range(len(private_key[0])):
                 if z == private_key[0][t]:
                     indices.append(t)
+
         final = 0
-        # print(x)
-        # print(letter_values)
+
         for pos in indices:
-            # print("made it")
-            final += math.pow(2, 7-pos)
-            # print(final)
+            final += math.pow(2, 7 - pos)
         final_list.append(chr(int(final)))
 
     final_string = "".join(final_list)
@@ -202,16 +193,6 @@ def decrypt_mhkc(ciphertext, private_key):
 
 def main():
 
-    # a = input("Word: ").upper()
-    # num = int(input("Number: "))
-    #
-    # yes = encrypt_caesar(a, num)
-    #
-    # print(decrypt_caesar(yes, num))
-    # peen = generate_private_key()
-    # print(peen)
-    # other_peen = create_public_key(peen)
-    # print(other_peen)
 
     private_key = ([2, 7, 11, 21, 42, 89, 180, 354], 881, 588)
     # private_key = generate_private_key()
