@@ -7,40 +7,46 @@ import math
 import string
 import random
 
-###Dependencies
+### Dependencies
 # Bit to byte: Takes a tuple of length 8 and converts it into an integer in [0, 255]
 def bit_to_byte(bits):
     sum = 0
-    for i in range(8):
-        if int(bits[i]) == 1:
-            sum += (2 ** (7 - i))
+    if len(bits) == 8:
+        for i in range(8):
+            if int(bits[i]) == 1:
+                sum += (2 ** (7 - i))
 
-    return sum
+        return sum
+    else:
+        print("invalid byte representation")
 
 # Byte to bit: Takes an integer in [0, 255] and converts it into a tuple of length 8
 def byte_to_bit(byte):
     bits = []
     byteInt = int(byte)
-    for i in range (8):
-        x = 7 - i
-        if (byteInt - (2 ** x)) >= 0:
-            bits.append(1)
-            byteInt = byteInt - (2 ** x)
-        else:
-            bits.append(0)
+    if 0 <= byte <= 255:
+        for i in range (8):
+            x = 7 - i
+            if (byteInt - (2 ** x)) >= 0:
+                bits.append(1)
+                byteInt = byteInt - (2 ** x)
+            else:
+                bits.append(0)
 
-    return bits
+        return bits
+    else:
+        print("out of 8-bit bounds")
 
 # Caesar Cipher
 # Arguments: string, integer
 # Returns: string
 def encrypt_caesar(plaintext, offset):
     encrypted = ""
-
+    if not plaintext.isupper():
+        plaintext = plaintext.upper()
     for i in plaintext:
         if 64 < ord(i) < 91:
             new_index = ord(i) + offset
-
             if new_index < 91:
                 encrypted = encrypted + chr(new_index)
             else:
@@ -54,11 +60,11 @@ def encrypt_caesar(plaintext, offset):
 # Returns: string
 def decrypt_caesar(ciphertext, offset):
     decrypted = ""
-
+    if not ciphertext.isupper():
+        ciphertext = ciphertext.upper()
     for i in ciphertext:
         if 64 < ord(i) < 91:
             new_index = ord(i) - offset
-
             if new_index > 64:
                 decrypted = decrypted + chr(new_index)
             else:
@@ -73,12 +79,12 @@ def decrypt_caesar(ciphertext, offset):
 # Returns: string
 def encrypt_vigenere(plaintext, keyword):
     alphabet = string.ascii_uppercase
-
+    if not plaintext.isupper():
+        plaintext = plaintext.upper()
     for i in range(0, len(plaintext)):
         index = alphabet.find(keyword[i % len(keyword)])
         index2 = alphabet.find(plaintext[i])
         index3 = int(index + index2)
-
     encrypted = ""
     encrypted += alphabet[index3 % len(alphabet)]
 
@@ -88,10 +94,11 @@ def encrypt_vigenere(plaintext, keyword):
 # Returns: string
 def decrypt_vigenere(ciphertext, keyword):
     alphabet = string.ascii_uppercase
-
-    for i in range(0, len(plaintext)):
+    if not ciphertext.isupper():
+        ciphertext = ciphertext.upper()
+    for i in range(0, len(ciphertext)):
         index = alphabet.find(keyword[i % len(keyword)])
-        index2 = alphabet.find(plaintext[i])
+        index2 = alphabet.find(ciphertext[i])
         index3 = int(index2 - index)
 
     decrypted = ""
@@ -192,15 +199,20 @@ def decrypt_mhkc(ciphertext, private_key):
 
 
 def main():
+    print(bit_to_byte([1, 0, 0, 0, 1, 0, 1, 0]))
+    print(byte_to_bit(138))
+    print(encrypt_caesar("hello", 4))
+    print(decrypt_caesar(encrypt_caesar("hello", 15), 11))
+    print(encrypt_vigenere("hello", "AAAAA"))
+    print(decrypt_vigenere(encrypt_vigenere("hello", "AAAAA"), "AAAAA"))
 
-
-    private_key = ([2, 7, 11, 21, 42, 89, 180, 354], 881, 588)
-    # private_key = generate_private_key()
-    public_key = (create_public_key(private_key))
-
-    print(encrypt_mhkc("a", public_key))
-
-    print(decrypt_mhkc(encrypt_mhkc("", public_key), private_key))
+    # private_key = ([2, 7, 11, 21, 42, 89, 180, 354], 881, 588)
+    # # private_key = generate_private_key()
+    # public_key = (create_public_key(private_key))
+    #
+    # print(encrypt_mhkc("a", public_key))
+    #
+    # print(decrypt_mhkc(encrypt_mhkc("", public_key), private_key))
 
 if __name__ == "__main__":
     main()
