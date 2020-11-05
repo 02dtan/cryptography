@@ -148,7 +148,7 @@ def generate_private_key(n = 8):
 
     private_key.append(R)
 
-    return private_key
+    return tuple(private_key)
 
 # Arguments: tuple (W, Q, R)
 # Returns: tuple B - a length-n tuple of integers
@@ -158,7 +158,7 @@ def create_public_key(private_key):
     for line in (private_key[0]):
         public_key.append((private_key[2] * line) % private_key[1])
 
-    return public_key
+    return tuple(public_key)
 
 # Arguments: string, tuple B
 # Returns: list of integers
@@ -177,9 +177,11 @@ def encrypt_mhkc(plaintext, public_key):
 # Arguments: two integers, q and r
 # Returns: result of inverse modulus function
 def mod_inverse(q, r):
-    for num in range(2, r):
-        if (r * num % q) == 1:
+    r = r % q
+    for num in range(1, q):
+        if (r * num) % q == 1:
             return num
+    return 1
 
 # Arguments: list of integers, tuple (W,Q,R)
 # Returns: bytearray or str of plaintext
@@ -215,22 +217,11 @@ def decrypt_mhkc(ciphertext, private_key):
     return final_string
 
 def main():
-    print(bit_to_byte([1, 0, 0, 0, 1, 0, 1, 0]))
-    print(byte_to_bit(138))
-    print(encrypt_caesar("hello", 4))
-    print(decrypt_caesar(encrypt_caesar("hello", 15), 11))
-    print(encrypt_vigenere("hello", "aaaaa"))
-    print(decrypt_vigenere(encrypt_vigenere("hello", "ABCDE"), "ABCDE"))
-    print(encrypt_vigenere("what", "lsl"))
-    print(encrypt_vigenere("what", "lslllslslsl"))
-
-    # private_key = ([2, 7, 11, 21, 42, 89, 180, 354], 881, 588)
-    # # private_key = generate_private_key()
-    # public_key = (create_public_key(private_key))
-    #
-    # print(encrypt_mhkc("a", public_key))
-    #
-    # print(decrypt_mhkc(encrypt_mhkc("", public_key), private_key))
+    private_key = ((9, 14, 27, 68, 127, 370, 857, 1597), 4745, 2)
+    public_key = (create_public_key(private_key))
+    print(public_key)
+    print(encrypt_mhkc("POTATOSALAD", public_key))
+    print(decrypt_mhkc(encrypt_mhkc("POTATOSALAD", public_key), private_key))
 
 if __name__ == "__main__":
     main()
